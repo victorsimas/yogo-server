@@ -10,5 +10,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine AS final
 WORKDIR /app
 COPY --from=build /app .
 EXPOSE 5000
-ENV PROJECT="YogoServer.dll"
-CMD ["/bin/sh","-c","dotnet YogoServer"]
+CMD dotnet YogoServer.dll
