@@ -11,7 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="yogo" CopyToPublishDirectory="Always" />
+	  <None Update="yogoBinaries\yogo">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
   </ItemGroup>
 
 </Project>

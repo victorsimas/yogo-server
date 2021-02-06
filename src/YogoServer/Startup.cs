@@ -30,9 +30,22 @@ namespace YogoServer
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "YogoServer v1"));
             }
 
-            app.UseRouting();
+            app.UseForwardedHeaders();
 
-            app.UseAuthorization();
+            app.UseStaticFiles();
+
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyHeader()
+                       .AllowAnyMethod();
+            });
+
+            app.UseApiErrorHandlerMiddleware()
+               .UseResponseCompression()
+               .UseAuthentication();
+
+            app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {

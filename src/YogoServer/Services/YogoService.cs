@@ -1,61 +1,77 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using YogoServer.Models;
 using YogoServer.Requests;
+using System.IO;
+using Microsoft.Extensions.Logging;
+using YogoServer.ErrorHandling;
 
 namespace YogoServer.Services
 {
     public class YogoService : IYogoService
     {
         private readonly Process _process;
+        private readonly ILogger<IYogoService> _logger;
 
-        public YogoService(Process process)
+        public YogoService(Process process,ILogger<IYogoService> logger)
         {
             _process = process;
+            _logger = logger;
         }
 
         public Task<IEnumerable<string>> GetListEmails(InboxListRequest request)
         {
             try
             {
-                _process.StartInfo.FileName = "yogo";
-                _process.StartInfo.Arguments = $"inbox list {request.User} {request.Quantidade}";
-            }
-            catch(Exception)
-            {
-                return null;
-            }
+                DefineProcess();
 
-            return Task.FromResult(DefineListEmail(ExecYogoProcess()));
+                _process.StartInfo.Arguments = $"inbox list {request.User} {request.Quantidade}";
+                return Task.FromResult(DefineListEmail(ExecYogoProcess()));
+            }
+            catch(Exception ex)
+            {
+                throw new FailedDependencyException(ex.Message, new string[] { ex.Message } );
+            }
         }
 
         public Task<Email> GetEmailMessage(InboxMailRequest request)
         {
             try
             {
-                _process.StartInfo.FileName = "yogo";
-                _process.StartInfo.Arguments = $"inbox show {request.User} {request.Index}";
-            }
-            catch(Exception)
-            {
-                return null;
-            }
+                DefineProcess();
 
-            return Task.FromResult(DefineMessageEmail(ExecYogoProcess(), request.Optmize, request.IgnoreRandomText));
+                _process.StartInfo.Arguments = $"inbox show {request.User} {request.Index}";
+                return Task.FromResult(DefineMessageEmail(ExecYogoProcess(), request.Optmize, request.IgnoreRandomText));
+            }
+            catch(Exception ex)
+            {
+                throw new FailedDependencyException(ex.Message, new string[] { ex.Message } );
+            }
+        }
+
+        private void DefineProcess()
+        {
+            
+            _process.StartInfo.FileName = $"{AppDomain.CurrentDomain.BaseDirectory}yogoBinaries/yogo";
         }
 
         private string ExecYogoProcess()
         {
+            _process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             _process.StartInfo.UseShellExecute = false;
             _process.StartInfo.RedirectStandardOutput = true;
+            _process.StartInfo.RedirectStandardError = true;
             _process.Start();
+
+            string result = _process.StandardOutput.ReadToEnd();
 
             _process.WaitForExit();
 
-            return _process.StandardOutput.ReadToEnd();
+            return result;
         }
 
         private IEnumerable<string> DefineListEmail(string yogoOutput)
@@ -70,20 +86,28 @@ namespace YogoServer.Services
 
             return new Email
             {
-                HeadEmail = DefineMessageEmailHead(read[0]),
+                HeadEmail = DefineMessageEmailHead(read.FirstOrDefault()),
                 Body = DefineMessageEmailBody(read, optmize, ignoreRandomText)
             };
         }
 
         private HeadEmail DefineMessageEmailHead(string readFirstIndex)
         {
-            string[] segment = readFirstIndex.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-            return new HeadEmail
+            if (readFirstIndex is not null)
             {
-                From = segment[0].Split(':')[1],
-                Title = segment[1].Split(':')[1],
-                Date = segment[2].Split(':')[1]
-            };
+                string[] segment = readFirstIndex.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+
+                List<string> segmentGeneric = segment.OfType<string>().ToList();
+
+                return new HeadEmail
+                {
+                    From = segmentGeneric?.FirstOrDefault(x => x.Contains("From", StringComparison.OrdinalIgnoreCase))?.Split(':')?.LastOrDefault(),
+                    Title = segmentGeneric?.FirstOrDefault(x => x.Contains("Title", StringComparison.OrdinalIgnoreCase))?.Split(':')?.LastOrDefault(),
+                    Date = segmentGeneric?.FirstOrDefault(x => x.Contains("Date", StringComparison.OrdinalIgnoreCase))?.Split(':')?.LastOrDefault(),
+                };
+            }
+            
+            return null;
         }
 
         private Dictionary<string, List<string>> DefineMessageEmailBody(string[] read, bool optmize, bool ignoreRandomText)
