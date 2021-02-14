@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using YogoServer.Requests;
@@ -8,6 +9,8 @@ namespace YogoServer.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.FailedDependency)]
     public class InboxController : ControllerBase
     {
         private readonly ILogger<InboxController> _logger;
