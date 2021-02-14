@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using YogoServer.Requests;
+using YogoServer.Responses;
 using YogoServer.Services;
 
 namespace YogoServer.Controllers
@@ -23,12 +24,14 @@ namespace YogoServer.Controllers
         }
 
         [HttpGet("list")]
+        [Produces(typeof(Emails))]
         public async Task<IActionResult> List([FromQuery] InboxListRequest request)
         {
             return Ok(await _service.Get(request, nameof(List).ToLower()));
         }
 
         [HttpGet("show")]
+        [Produces(typeof(Email))]
         public async Task<IActionResult> Show([FromQuery] InboxMailRequest request)
         {
             return Ok(await _service.Get(request, nameof(Show).ToLower()));
