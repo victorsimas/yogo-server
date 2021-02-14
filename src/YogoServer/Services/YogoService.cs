@@ -12,7 +12,7 @@ namespace YogoServer.Services
         private readonly Process _process;
         private readonly ILogger<IYogoService> _logger;
 
-        public YogoService(Process process,ILogger<IYogoService> logger)
+        public YogoService(Process process, ILogger<IYogoService> logger)
         {
             _process = process;
             _logger = logger;

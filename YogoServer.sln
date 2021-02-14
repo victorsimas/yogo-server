@@ -5,7 +5,11 @@ VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{262EC7BD-94F2-49A1-95D0-07B1272751D0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{362EC7BD-94F2-49A1-95D0-07B1272751D0}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YogoServer", "src/YogoServer/YogoServer.csproj", "{B43F9A25-3036-4845-A39E-436C861675C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YogoServer.UnitTests", "tests/YogoServer.UnitTests/YogoServer.UnitTests.csproj", "{C43F9A25-3036-4845-A39E-436C861675C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +21,10 @@ Global
 		{B43F9A25-3036-4845-A39E-436C861675C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B43F9A25-3036-4845-A39E-436C861675C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B43F9A25-3036-4845-A39E-436C861675C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C43F9A25-3036-4845-A39E-436C861675C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C43F9A25-3036-4845-A39E-436C861675C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C43F9A25-3036-4845-A39E-436C861675C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C43F9A25-3036-4845-A39E-436C861675C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -26,5 +34,6 @@ Global
 	EndGlobalSection
 		GlobalSection(NestedProjects) = preSolution
 		{B43F9A25-3036-4845-A39E-436C861675C1} = {262EC7BD-94F2-49A1-95D0-07B1272751D0}
+		{C43F9A25-3036-4845-A39E-436C861675C1} = {362EC7BD-94F2-49A1-95D0-07B1272751D0}
 	EndGlobalSection
 EndGlobal

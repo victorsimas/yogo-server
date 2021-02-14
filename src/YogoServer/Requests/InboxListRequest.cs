@@ -13,7 +13,7 @@ namespace YogoServer.Requests
         public int Amount { get; set; }
 
         [JsonIgnore]
-        public override int AmountOrIndex 
+        public override int AmountOrIndex
         { 
             get
             {
