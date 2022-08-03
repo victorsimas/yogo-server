@@ -18,20 +18,30 @@ namespace YogoServer.Services
             _logger = logger;
         }
 
-        public async Task<dynamic> Get(InboxRequestBase request, string operation)
+        public async Task<T> Get<T>(InboxRequestBase<T> request, string operation)
         {
             try
             {
-                _process.StartInfo.FileName = $"{AppDomain.CurrentDomain.BaseDirectory}yogoBinaries/yogo";
+                string sistemaOperacional = DefinirSistemaOperacional(Environment.OSVersion.Platform);
+
+                _process.StartInfo.FileName = $"{AppDomain.CurrentDomain.BaseDirectory}yogoBinaries/yogo-{sistemaOperacional}";
                 _process.StartInfo.Arguments = $"inbox {operation} {request.User} {request.AmountOrIndex}";
 
-                return await request.DefineAsync(ExecYogoProcess());
+                return await request.ExecuteAsync(ExecYogoProcess());
             }
             catch(Exception ex)
             {
                 throw new FailedDependencyException(ex.Message, new string[] { ex.Message } );
             }
         }
+
+        private string DefinirSistemaOperacional(PlatformID platform) => (platform) switch
+        {
+            PlatformID.MacOSX => "macos",
+            PlatformID.Unix => "unix",
+            PlatformID.Win32NT => "windows.exe",
+            _ => "unix"
+        };
 
         private string ExecYogoProcess()
         {

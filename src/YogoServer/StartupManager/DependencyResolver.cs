@@ -39,7 +39,7 @@ namespace YogoServer.StartupManager
 
         public static IApplicationBuilder UseApiErrorHandlerMiddleware(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<ApiErrorHanlder>();
+            return builder.UseMiddleware<ApiErrorHandler>();
         }
     }
 }

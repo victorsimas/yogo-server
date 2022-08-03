@@ -5,6 +5,6 @@ namespace YogoServer.Services
 {
     public interface IYogoService
     {
-        Task<dynamic> Get(InboxRequestBase request, string operation);
+        Task<T> Get<T>(InboxRequestBase<T> request, string operation);
     }
 }

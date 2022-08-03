@@ -11,7 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <None Update="yogoBinaries\yogo">
+	  <None Update="yogoBinaries\yogo-macos">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+    <None Update="yogoBinaries\yogo-unix">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+    <None Update="yogoBinaries\yogo-windows.exe">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
   </ItemGroup>

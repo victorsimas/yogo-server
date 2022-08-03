@@ -7,7 +7,7 @@ using YogoServer.Responses;
 
 namespace YogoServer.Requests
 {
-    public class InboxListRequest : InboxRequestBase
+    public class InboxListRequest : InboxRequestBase<Emails>
     {
         [Required(ErrorMessage = "It's Not specified the Amount of emails")]
         public int Amount { get; set; }
@@ -21,7 +21,7 @@ namespace YogoServer.Requests
             }
         }
 
-        public async override Task<dynamic> DefineAsync(string yogoOutput)
+        public async override Task<Emails> ExecuteAsync(string yogoOutput)
         {
             Emails emails = new Emails() { Inbox = new List<string>() };
             

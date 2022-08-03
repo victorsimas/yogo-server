@@ -1,18 +1,19 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using YogoServer.Responses;
 
 namespace YogoServer.Requests
 {
-    public class InboxMailRequest : InboxRequestBase
+    public class InboxMailRequest : InboxRequestBase<Email>
     {
         [Required(ErrorMessage = "It's Not specified the Index of the email")]
         public int Index { get; set; }
 
-        [JsonIgnore]
+        [BindNever]
         public override int AmountOrIndex
         { 
             get
@@ -23,7 +24,7 @@ namespace YogoServer.Requests
 
         public bool Optmize { get; set; } = true;
 
-        public async override Task<dynamic> DefineAsync(string yogoOutput)
+        public async override Task<Email> ExecuteAsync(string yogoOutput)
         {
             Email email = new Email();
 
